@@ -180,8 +180,8 @@ namespace Bangazon.Controllers
                 .Include(o => o.User)
                 .Include(o => o.OrderProducts)
                 .ThenInclude(op => op.Product)
-                .FirstOrDefaultAsync(m => m.DateCompleted == null);
-            return View(await applicationDbContext);
+                .Where(o => o.DateCompleted == null);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         public async Task<IActionResult> ReportsIndex()

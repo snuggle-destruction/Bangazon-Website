@@ -4,39 +4,24 @@
     ViewData["Title"] = "IncompleteOrders";
 }
 
-<h1>IncompleteOrders</h1>
+<h1>Incomplete Orders</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+
+
+
+    @foreach (var item in Model)
+    {
+        <br />
+        <h4>@Html.DisplayFor(model => item.User.UserName)</h4>
+        <br />
+        <h5>Order @Html.DisplayFor(model => item.OrderId)</h5>
+        <br />
+        foreach (var op in item.OrderProducts)
         {
-            foreach (var op in item.OrderProducts)
-            {
-            <td>
-                @Html.DisplayFor(modelItem => op.Product.Title)
-            </td>
+            @Html.DisplayFor(modelItem => op.Product.Title)
+            <br />
         }
-        <tr>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
-            </td>
-        </tr>
     }
-        </tbody>
-    </table>
+
+</table>
