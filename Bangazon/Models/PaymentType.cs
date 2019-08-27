@@ -23,10 +23,12 @@ namespace Bangazon.Models
 
         [Required]
         [StringLength(20)]
+        [Display(Name = "Account Number")]
         public string AccountNumber { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
+        [MyDate(ErrorMessage = "Invalid date")]
         [Display(Name = "Expiration Date")]
         public DateTime ExpirationDate { get; set; }
 
@@ -43,6 +45,16 @@ namespace Bangazon.Models
         {
             get
             { return $"********{AccountNumber?.Substring(AccountNumber.Length - 4)}"; }
+        }
+    }
+
+    public class MyDateAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)// Return a boolean value: true == IsValid, false != IsValid
+        {
+            DateTime d = Convert.ToDateTime(value);
+            return d >= DateTime.Now; //Dates Greater than or equal to today are valid (true)
+
         }
     }
 }

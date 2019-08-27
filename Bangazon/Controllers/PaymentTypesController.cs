@@ -84,7 +84,6 @@ namespace Bangazon.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", paymentType.UserId);
             return View(paymentType);
         }
 
@@ -101,7 +100,6 @@ namespace Bangazon.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", paymentType.UserId);
             return View(paymentType);
         }
 
@@ -110,33 +108,42 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ExpirationDate")] PaymentType paymentType)
+        public async Task<IActionResult> Edit(int id, [Bind("Description,AccountNumber,ExpirationDate")] PaymentType paymentType)
         {
             var editedPayment = await _context.PaymentType.FindAsync(id);
             editedPayment.ExpirationDate = paymentType.ExpirationDate;
+            editedPayment.Description = paymentType.Description;
+            editedPayment.AccountNumber = paymentType.AccountNumber;
+
+            ModelState.Remove("UserId");
+            
 
             if (id != editedPayment.PaymentTypeId)
             {
                 return NotFound();
             }
 
-            try
+            if (ModelState.IsValid)
             {
-                _context.Update(editedPayment);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PaymentTypeExists(editedPayment.PaymentTypeId))
+                try
                 {
-                    return NotFound();
+                    _context.Update(editedPayment);
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!PaymentTypeExists(editedPayment.PaymentTypeId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            return View(paymentType);
         }
 
         // GET: PaymentTypes/Delete/5
