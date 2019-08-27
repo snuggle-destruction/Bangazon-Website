@@ -28,7 +28,7 @@ namespace Bangazon.Models
 
         [Required]
         [DataType(DataType.Date)]
-        [MyDate(ErrorMessage = "Invalid date")]
+        [DateCheck(ErrorMessage = "Invalid date")]
         [Display(Name = "Expiration Date")]
         public DateTime ExpirationDate { get; set; }
 
@@ -48,7 +48,7 @@ namespace Bangazon.Models
         }
     }
 
-    public class MyDateAttribute : ValidationAttribute
+    public class DateCheckAttribute : ValidationAttribute
     {
         public override bool IsValid(object value)// Return a boolean value: true == IsValid, false != IsValid
         {
