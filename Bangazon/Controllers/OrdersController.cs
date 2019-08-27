@@ -183,5 +183,10 @@ namespace Bangazon.Controllers
                 .FirstOrDefaultAsync(m => m.DateCompleted == null);
             return View(await applicationDbContext);
         }
+
+        public async Task<IActionResult> ReportsIndex()
+        {
+            return View();
+        }
     }
 }

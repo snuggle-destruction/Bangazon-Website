@@ -1,0 +1,12 @@
+﻿@model Bangazon.Models.Order
+
+@{
+    ViewData["Title"] = "ReportsIndex";
+}
+
+<h1>Reports</h1>
+
+<p>
+    <a asp-action="IncompleteOrders" asp-route-id="@Model.OrderId">Incomplete Orders</a> 
+</p>
+
