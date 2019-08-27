@@ -15,11 +15,6 @@ namespace Bangazon.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public OrdersController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
         private readonly UserManager<ApplicationUser> _userManager;
         public OrdersController(ApplicationDbContext context,
                           UserManager<ApplicationUser> userManager)
@@ -32,7 +27,7 @@ namespace Bangazon.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
+            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User).Include(o => o.OrderProducts).ThenInclude(op => op.Product);
             return View(await applicationDbContext.ToListAsync());
         }
 
