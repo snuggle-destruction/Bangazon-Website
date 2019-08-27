@@ -68,7 +68,7 @@
                 @Html.DisplayNameFor(model => model.ProductType)
         </dt>
         <dd class="col-sm-10">
-            <a asp-action="GetProductsByCategory" asp-route-id="Model.ProductTypeId">
+            <a asp-controller="ProductTypes" asp-action="Details" asp-route-id="@Model.ProductTypeId">
                 @Html.DisplayFor(model => model.ProductType.Label)
             </a>
         </dd>

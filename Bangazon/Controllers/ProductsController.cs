@@ -186,12 +186,6 @@ namespace Bangazon.Controllers
             return View(model);
         }
 
-        // GET: All products in one category
-        public async Task<IActionResult> GetProductsByCategory(int productTypeId)
-        {
-            var applicationDbContext = _context.Product.Where(p => p.ProductTypeId == productTypeId);
-            return View(await applicationDbContext.ToListAsync());
-        }
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);
