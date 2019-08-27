@@ -37,8 +37,23 @@
     </dl>
 </div>
 
+@foreach (var item in Model.OrderProducts)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.ProductType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.Quantity)
+        </td>
+    </tr>
+}
 
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.OrderId">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.OrderId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

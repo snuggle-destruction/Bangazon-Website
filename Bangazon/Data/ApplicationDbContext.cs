@@ -200,7 +200,7 @@ namespace Bangazon.Data {
                     PaymentTypeId = 2,
                     DateCompleted = DateTime.Now.Date.AddDays(-10)
                 }
-            );;
+            );
 
             modelBuilder.Entity<OrderProduct> ().HasData (
                 new OrderProduct()
@@ -208,14 +208,11 @@ namespace Bangazon.Data {
                     OrderProductId = 1,
                     OrderId = 1,
                     ProductId = 1
-                }
-            );
-
-            modelBuilder.Entity<OrderProduct> ().HasData (
+                },
                 new OrderProduct()
                 {
                     OrderProductId = 2,
-                    OrderId = 1,
+                    OrderId = 2,
                     ProductId = 2
                 }
             );
