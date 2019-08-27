@@ -163,9 +163,23 @@ namespace Bangazon.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> GetOrderHistory()
+        {
+            var user = await GetCurrentUserAsync();
+
+            var orderHistoryList = await _context.Order
+                .Where(u => u.UserId == user.Id && u.DateCompleted  == null)
+                .Include(u => u.OrderProducts)
+                .ThenInclude(op => op.Product)
+                .ToListAsync();
+
+            return View(orderHistoryList);
+        }
+
         private bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.OrderId == id);
         }
+
     }
 }
