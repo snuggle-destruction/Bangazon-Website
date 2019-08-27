@@ -25,6 +25,11 @@ namespace Bangazon.Models
         public string AccountNumber { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
+        [Display(Name = "Expiration Date")]
+        public DateTime ExpirationDate { get; set; }
+
+        [Required]
         public string UserId { get; set; }
 
         [Required]
