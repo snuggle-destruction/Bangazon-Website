@@ -37,23 +37,46 @@
     </dl>
 </div>
 
-@foreach (var item in Model.OrderProducts)
-{
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Product.ProductType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Product.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Product.Quantity)
-        </td>
-    </tr>
-}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderProducts.First().Product.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderProducts.First().Product.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderProducts.First().Product.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderProducts.First().Product.ProductType.Label)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderProducts)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductType.ProductTypeId)
+            </td>
+        </tr>
+
+        }
 
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.OrderId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.OrderId">Edit</a> |
+            <a asp-action="Index">Back to List</a>
+        </div>
