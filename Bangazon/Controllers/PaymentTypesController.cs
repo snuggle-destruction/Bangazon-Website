@@ -31,6 +31,7 @@ namespace Bangazon.Controllers
             var user = await GetCurrentUserAsync();
 
             var applicationDbContext = _context.PaymentType.Include(p => p.User).Where(p => p.UserId == user.Id);
+
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -41,10 +42,17 @@ namespace Bangazon.Controllers
             {
                 return NotFound();
             }
-
             var paymentType = await _context.PaymentType
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.PaymentTypeId == id);
+
+            var wasCreatedBy = await WasCreatedByUser(paymentType);
+
+            if (!wasCreatedBy)
+            {
+                return NotFound();
+            }
+
             if (paymentType == null)
             {
                 return NotFound();
@@ -166,5 +174,11 @@ namespace Bangazon.Controllers
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+        private async Task<bool> WasCreatedByUser(PaymentType paymentType)
+        {
+            var user = await GetCurrentUserAsync();
+            return paymentType.UserId == user.Id;
+        }
     }
 }
