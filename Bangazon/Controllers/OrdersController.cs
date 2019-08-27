@@ -7,24 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
-<<<<<<< HEAD
-=======
 using Microsoft.AspNetCore.Identity;
->>>>>>> master
 
 namespace Bangazon.Controllers
 {
     public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
-<<<<<<< HEAD
 
         public OrdersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-=======
         private readonly UserManager<ApplicationUser> _userManager;
         public OrdersController(ApplicationDbContext context,
                           UserManager<ApplicationUser> userManager)
@@ -34,8 +29,6 @@ namespace Bangazon.Controllers
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
-
->>>>>>> master
         // GET: Orders
         public async Task<IActionResult> Index()
         {
