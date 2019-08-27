@@ -18,6 +18,7 @@ namespace Bangazon.Models
 
         [Required]
         [StringLength(55)]
+        [Display(Name = "Payment Type")]
         public string Description { get; set; }
 
         [Required]
@@ -32,7 +33,6 @@ namespace Bangazon.Models
         [Required]
         public string UserId { get; set; }
 
-        [Required]
         public ApplicationUser User { get; set; }
 
         public ICollection<Order> Orders { get; set; }
@@ -42,7 +42,7 @@ namespace Bangazon.Models
         public string LastFour
         {
             get
-            { return $"********{AccountNumber.Substring(AccountNumber.Length - 4)}"; }
+            { return $"********{AccountNumber?.Substring(AccountNumber.Length - 4)}"; }
         }
     }
 }

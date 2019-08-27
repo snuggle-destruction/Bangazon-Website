@@ -64,7 +64,6 @@ namespace Bangazon.Controllers
         // GET: PaymentTypes/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
         }
 
@@ -73,8 +72,12 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PaymentTypeId,DateCreated,Description,AccountNumber,UserId")] PaymentType paymentType)
+        public async Task<IActionResult> Create([Bind("PaymentTypeId,DateCreated,Description,AccountNumber,ExpirationDate")] PaymentType paymentType)
         {
+            var user = await GetCurrentUserAsync();
+            paymentType.UserId = user.Id;
+            ModelState.Remove("UserId");
+
             if (ModelState.IsValid)
             {
                 _context.Add(paymentType);
@@ -107,35 +110,33 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PaymentTypeId,DateCreated,Description,AccountNumber,UserId")] PaymentType paymentType)
+        public async Task<IActionResult> Edit(int id, [Bind("ExpirationDate")] PaymentType paymentType)
         {
-            if (id != paymentType.PaymentTypeId)
+            var editedPayment = await _context.PaymentType.FindAsync(id);
+            editedPayment.ExpirationDate = paymentType.ExpirationDate;
+
+            if (id != editedPayment.PaymentTypeId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(paymentType);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PaymentTypeExists(paymentType.PaymentTypeId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(editedPayment);
+                await _context.SaveChangesAsync();
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", paymentType.UserId);
-            return View(paymentType);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PaymentTypeExists(editedPayment.PaymentTypeId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: PaymentTypes/Delete/5
@@ -179,6 +180,11 @@ namespace Bangazon.Controllers
         {
             var user = await GetCurrentUserAsync();
             return paymentType.UserId == user.Id;
+        }
+
+        private Task<PaymentType> GetOnePaymentType(int id)
+        {
+            return _context.PaymentType.FirstOrDefaultAsync(p => p.PaymentTypeId == id);
         }
     }
 }
