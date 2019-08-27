@@ -192,8 +192,15 @@ namespace Bangazon.Data {
                     OrderId = 1,
                     UserId = user.Id,
                     PaymentTypeId = null
+                },
+                new Order()
+                {
+                    OrderId = 2,
+                    UserId = user.Id,
+                    PaymentTypeId = 2,
+                    DateCompleted = DateTime.Now.Date.AddDays(-10)
                 }
-            );
+            );;
 
             modelBuilder.Entity<OrderProduct> ().HasData (
                 new OrderProduct()

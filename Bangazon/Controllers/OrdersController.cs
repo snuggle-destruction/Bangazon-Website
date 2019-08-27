@@ -168,8 +168,8 @@ namespace Bangazon.Controllers
             var user = await GetCurrentUserAsync();
 
             var orderHistoryList = await _context.Order
-                .Where(u => u.UserId == user.Id && u.DateCompleted  == null)
-                .Include(u => u.OrderProducts)
+                .Where(o => o.UserId == user.Id && o.DateCompleted == null)
+                .Include(o => o.OrderProducts)
                 .ThenInclude(op => op.Product)
                 .ToListAsync();
 
