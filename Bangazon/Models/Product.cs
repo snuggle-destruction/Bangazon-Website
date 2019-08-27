@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,7 +38,9 @@ namespace Bangazon.Models
 
         public string City {get; set;}
 
-        public string ImagePath {get; set;}
+        public virtual string ImagePath {get; set;}
+
+  
 
         public bool Active { get; set; }
 

@@ -9,6 +9,8 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Bangazon.Models.ProductViewModels;
 using Microsoft.AspNetCore.Identity;
+using System.IO;
+using static System.Net.WebRequestMethods;
 
 namespace Bangazon.Controllers
 {
@@ -26,10 +28,20 @@ namespace Bangazon.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
+            //var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
+            //return View(await applicationDbContext.ToListAsync());
+
+            var products = from p in _context.Product
+                         select p;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.Title.Contains(searchString));
+            }
+
+            return View(await products.ToListAsync());
         }
 
         // GET: Products/Details/5
@@ -70,7 +82,26 @@ namespace Bangazon.Controllers
         {
             if (ModelState.IsValid)
             { }
-                _context.Add(product);
+
+            if (product.ImagePath != null)
+                try
+                {
+                    var fileName = Path.GetFileName(product.ImagePath.FileName);
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", fileName);
+                    
+                    product.ImagePath.SaveAs(path);
+                    ViewBag.Message = "File uploaded successfully";
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = "ERROR:" + ex.Message.ToString();
+                }
+            else
+            {
+                ViewBag.Message = "You have not specified a file.";
+            }
+
+            _context.Add(product);
                 await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = product.ProductId });
