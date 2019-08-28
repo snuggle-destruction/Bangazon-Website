@@ -1,20 +1,17 @@
 ﻿@model Bangazon.ViewComponents.RecentProductsViewModel
 
-<h1>Recent Products</h1>
+<h1>Recent Products Added For Sale</h1>
 
 <table class="table">
     <tbody>
             @foreach (var item in Model.Products)
             { 
             <tr>
-                <th>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </th>
-                <th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)<br />
                     @Html.DisplayFor(modelItem => item.Description)
-                </th>
+                </td>
             </tr>
             }
-        </tr>
     </tbody>
 </table>
