@@ -3,29 +3,18 @@
 <h1>Recent Products</h1>
 
 <table class="table">
-    <thead>
-        <tr>
+    <tbody>
             @foreach (var item in Model.Products)
-            {
+            { 
+            <tr>
                 <th>
-                    @Html.DisplayNameFor(model => item.Title)
+                    @Html.DisplayFor(modelItem => item.Title)
                 </th>
-            <th>
-                @Html.DisplayNameFor(model => item.Description)
-            </th>
-            <th></th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </th>
+            </tr>
             }
         </tr>
-    </thead>
-    <tbody>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                }
-            </tr>
     </tbody>
 </table>
