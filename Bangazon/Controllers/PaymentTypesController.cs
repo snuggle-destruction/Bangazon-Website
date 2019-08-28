@@ -96,6 +96,14 @@ namespace Bangazon.Controllers
             }
 
             var paymentType = await _context.PaymentType.FindAsync(id);
+
+            var wasCreatedBy = await WasCreatedByUser(paymentType);
+
+            if (!wasCreatedBy)
+            {
+                return NotFound();
+            }
+
             if (paymentType == null)
             {
                 return NotFound();
@@ -116,7 +124,14 @@ namespace Bangazon.Controllers
             editedPayment.AccountNumber = paymentType.AccountNumber;
 
             ModelState.Remove("UserId");
-            
+
+            var wasCreatedBy = await WasCreatedByUser(editedPayment);
+
+            if (!wasCreatedBy)
+            {
+                return NotFound();
+            }
+
 
             if (id != editedPayment.PaymentTypeId)
             {
@@ -171,6 +186,14 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var paymentType = await _context.PaymentType.FindAsync(id);
+
+            var wasCreatedBy = await WasCreatedByUser(paymentType);
+
+            if (!wasCreatedBy)
+            {
+                return NotFound();
+            }
+
             _context.PaymentType.Remove(paymentType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -189,9 +212,5 @@ namespace Bangazon.Controllers
             return paymentType.UserId == user.Id;
         }
 
-        private Task<PaymentType> GetOnePaymentType(int id)
-        {
-            return _context.PaymentType.FirstOrDefaultAsync(p => p.PaymentTypeId == id);
-        }
     }
 }
