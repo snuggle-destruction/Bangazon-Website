@@ -46,10 +46,7 @@ namespace Bangazon.Controllers
                 .Include(o => o.User)
                 .Include(o => o.OrderProducts)
                 .ThenInclude(op => op.Product)
-<<<<<<< HEAD
-=======
                 .ThenInclude(pt => pt.ProductType)
->>>>>>> master
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {
