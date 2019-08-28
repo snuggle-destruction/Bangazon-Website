@@ -11,6 +11,7 @@ using Bangazon.Models.ProductViewModels;
 using Microsoft.AspNetCore.Identity;
 using System.IO;
 using static System.Net.WebRequestMethods;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Bangazon.Controllers
 {
@@ -18,11 +19,14 @@ namespace Bangazon.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHostingEnvironment _environment;
         public ProductsController(ApplicationDbContext context,
-                          UserManager<ApplicationUser> userManager)
+                          UserManager<ApplicationUser> userManager,
+                          IHostingEnvironment environment)
         {
             _userManager = userManager;
             _context = context;
+            _environment = environment;
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
@@ -78,31 +82,26 @@ namespace Bangazon.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,Active,ProductTypeId")]Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,ImageFile,Active,ProductTypeId")]Product product)
         {
             if (ModelState.IsValid)
             { }
 
-            if (product.ImagePath != null)
-                try
-                {
-                    var fileName = Path.GetFileName(product.ImagePath.FileName);
-                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", fileName);
-                    
-                    product.ImagePath.SaveAs(path);
-                    ViewBag.Message = "File uploaded successfully";
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.Message = "ERROR:" + ex.Message.ToString();
-                }
-            else
-            {
-                ViewBag.Message = "You have not specified a file.";
-            }
 
             _context.Add(product);
                 await _context.SaveChangesAsync();
+
+            string img = Path.Combine(_environment.WebRootPath, "img");
+            if (product.ImageFile.Length > 0)
+            {
+                using (var fileStream = new FileStream(Path.Combine(img, product.ImageFile.FileName), FileMode.Create))
+                {
+                    await product.ImageFile.CopyToAsync(fileStream);
+                }
+            }
+            product.ImagePath = product.ImageFile.FileName;
+
+
 
             return RedirectToAction("Details", new { id = product.ProductId });
 

@@ -38,9 +38,11 @@ namespace Bangazon.Models
 
         public string City {get; set;}
 
-        public virtual string ImagePath {get; set;}
-
-  
+        
+        public string ImagePath { get; set; }
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
+       
 
         public bool Active { get; set; }
 
