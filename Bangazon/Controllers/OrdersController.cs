@@ -171,22 +171,5 @@ namespace Bangazon.Controllers
         {
             return _context.Order.Any(e => e.OrderId == id);
         }
-
-        // GET: incomplete Orders
-        public async Task<IActionResult> IncompleteOrders()
-        {
-            var applicationDbContext = _context.Order
-                .Include(o => o.PaymentType)
-                .Include(o => o.User)
-                .Include(o => o.OrderProducts)
-                .ThenInclude(op => op.Product)
-                .Where(o => o.DateCompleted == null);
-            return View(await applicationDbContext.ToListAsync());
-        }
-
-        public async Task<IActionResult> ReportsIndex()
-        {
-            return View();
-        }
     }
 }
