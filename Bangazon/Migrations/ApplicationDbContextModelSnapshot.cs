@@ -83,7 +83,7 @@ namespace Bangazon.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d5f1082f-1a5f-4fcd-bbc4-f7a390950216",
+                            ConcurrencyStamp = "2a307d73-37a1-4d5f-b10f-5d94409f7812",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Admina",
@@ -91,7 +91,7 @@ namespace Bangazon.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHMcfBZ8Brstlx0myQYD6lP1Jg7h9Km94JLrO2k234yp5BZCqoziehJsYM4p/9oLFw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENJUoUUluH9K9dlF62ac28wxk01Yprb5JsGWIQMFxEoeHiuU8o7Dgbi0WfuXHCvgzA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             StreetAddress = "123 Infinity Way",
@@ -272,7 +272,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             ProductId = 1,
-                            Active = true,
+                            Active = false,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It flies high",
                             Price = 2.9900000000000002,
@@ -285,7 +285,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             ProductId = 2,
-                            Active = true,
+                            Active = false,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It rolls fast",
                             Price = 29.989999999999998,
@@ -298,7 +298,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             ProductId = 3,
-                            Active = true,
+                            Active = false,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It cuts things",
                             Price = 31.489999999999998,
@@ -311,7 +311,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             ProductId = 4,
-                            Active = true,
+                            Active = false,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It puts holes in things",
                             Price = 24.890000000000001,
@@ -324,7 +324,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             ProductId = 5,
-                            Active = true,
+                            Active = false,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It puts things together",
                             Price = 22.690000000000001,
