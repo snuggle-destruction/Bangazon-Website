@@ -6,9 +6,7 @@
 
 <h1>Order History</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -22,7 +20,7 @@
                 @Html.DisplayNameFor(model => model.User)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PaymentType)
+                @Html.DisplayNameFor(model => model.PaymentType.Description)
             </th>
             <th></th>
         </tr>
@@ -37,10 +35,10 @@
                 @Html.DisplayFor(modelItem => item.DateCompleted)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
+                @Html.DisplayFor(modelItem => item.User.FullName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PaymentType.AccountNumber)
+                @Html.DisplayFor(modelItem => item.PaymentType.Description)
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.OrderId">Details</a>

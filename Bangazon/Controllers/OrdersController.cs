@@ -174,6 +174,7 @@ namespace Bangazon.Controllers
                 .Where(o => o.UserId == user.Id && o.DateCompleted != null)
                 .Include(o => o.OrderProducts)
                 .ThenInclude(op => op.Product)
+                .Include(o => o.PaymentType)
                 .ToListAsync();
 
             return View(orderHistoryList);

@@ -58,25 +58,35 @@
     <tbody>
         @foreach (var item in Model.OrderProducts)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductType.ProductTypeId)
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductType.Label)
+                </td>
+            </tr>
 
         }
+    </tbody>
+</table>
 
-
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model.OrderId">Edit</a> |
-            <a asp-action="Index">Back to List</a>
-        </div>
+@if (Model.DateCompleted == null)
+{
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.OrderId">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
+}
+else
+{
+    <div>
+        <a asp-action="GetOrderHistory">Back to List</a>
+    </div>
+}
