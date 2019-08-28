@@ -40,6 +40,7 @@ namespace Bangazon.Models
         public string ImagePath {get; set;}
 
         public bool Active { get; set; }
+        public bool SoldLocally { get; set; }
 
         [Required]
         [Display(Name = "Seller")]
@@ -56,6 +57,7 @@ namespace Bangazon.Models
         public Product ()
         {
             Active = true;
+            SoldLocally = false;
         }
 
     }
