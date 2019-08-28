@@ -42,6 +42,9 @@ namespace Bangazon.Controllers
             var order = await _context.Order
                 .Include(o => o.PaymentType)
                 .Include(o => o.User)
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                .ThenInclude(pt => pt.ProductType)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {
@@ -161,6 +164,20 @@ namespace Bangazon.Controllers
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> GetOrderHistory()
+        {
+            var user = await GetCurrentUserAsync();
+
+            var orderHistoryList = await _context.Order
+                .Where(o => o.UserId == user.Id && o.DateCompleted != null)
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                .Include(o => o.PaymentType)
+                .ToListAsync();
+
+            return View(orderHistoryList);
         }
 
         private bool OrderExists(int id)
