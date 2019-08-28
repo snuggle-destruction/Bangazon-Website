@@ -184,6 +184,5 @@ namespace Bangazon.Controllers
         {
             return _context.Order.Any(e => e.OrderId == id);
         }
-
     }
 }
