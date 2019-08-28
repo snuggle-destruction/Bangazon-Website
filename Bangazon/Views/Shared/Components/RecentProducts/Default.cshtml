@@ -1,0 +1,12 @@
+﻿@model Bangazon.ViewComponents.RecentProductsViewModel
+
+<h1>Recent Products Added For Sale</h1>
+
+<span style="display:flex; flex-flow: row wrap">
+    @foreach (var item in Model.Products)
+    {
+        <a class="nav-link text-dark" asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">
+            @Html.DisplayFor(modelItem => item.Title)
+        </a>
+    }
+</span>
