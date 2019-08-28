@@ -32,7 +32,7 @@ namespace Bangazon.Controllers
             //return View(await applicationDbContext.ToListAsync());
 
             var products = from p in _context.Product
-                         select p;
+                           select p;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -80,8 +80,8 @@ namespace Bangazon.Controllers
         {
             if (ModelState.IsValid)
             { }
-                _context.Add(product);
-                await _context.SaveChangesAsync();
+            _context.Add(product);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = product.ProductId });
 
@@ -91,7 +91,7 @@ namespace Bangazon.Controllers
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
             return View(product);
         }
- 
+
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -173,10 +173,37 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var orderedProduct = await _context.OrderProduct.FirstOrDefaultAsync(o => o.ProductId == id);
+            var order = await _context.Order.FirstOrDefaultAsync(o => o.OrderId == orderedProduct.OrderId);
             var product = await _context.Product.FindAsync(id);
-            _context.Product.Remove(product);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            if (order.DateCompleted == null)
+            {
+                _context.Product.Remove(product);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                try
+                {
+                    product.Active = false;
+                    _context.Update(product);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProductExists(product.ProductId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         public async Task<IActionResult> Types()
