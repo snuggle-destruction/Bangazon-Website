@@ -88,9 +88,6 @@ namespace Bangazon.Controllers
             { }
 
 
-            _context.Add(product);
-                await _context.SaveChangesAsync();
-
             string img = Path.Combine(_environment.WebRootPath, "img");
             if (product.ImageFile.Length > 0)
             {
@@ -101,7 +98,8 @@ namespace Bangazon.Controllers
             }
             product.ImagePath = product.ImageFile.FileName;
 
-
+            _context.Add(product);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = product.ProductId });
 
