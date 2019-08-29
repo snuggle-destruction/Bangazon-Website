@@ -9,6 +9,9 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Bangazon.Models.ProductViewModels;
 using Microsoft.AspNetCore.Identity;
+using System.IO;
+using static System.Net.WebRequestMethods;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Bangazon.Controllers
 {
@@ -16,11 +19,14 @@ namespace Bangazon.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHostingEnvironment _environment;
         public ProductsController(ApplicationDbContext context,
-                          UserManager<ApplicationUser> userManager)
+                          UserManager<ApplicationUser> userManager,
+                          IHostingEnvironment environment)
         {
             _userManager = userManager;
             _context = context;
+            _environment = environment;
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
@@ -29,7 +35,7 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> Index(string searchString)
         {
             //var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
-            //return View(await applicationDbContext.ToListAsync());
+            //return View(await applicationDbContext.ToListAsync());         
 
             var products = from p in _context.Product
                            select p;
@@ -76,16 +82,40 @@ namespace Bangazon.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,Active,ProductTypeId")]Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,ImageFile,Active,ProductTypeId")]Product product)
         {
             if (ModelState.IsValid)
             { }
-            _context.Add(product);
+
+            if (product.ImageFile == null)
+            {
+                _context.Add(product);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", new { id = product.ProductId });
+            }
+
+            if (product.ImageFile.Length == 0 || product.ImageFile.Length > 5120000)
+            {
+                TempData["msg"] = "<script>alert('Something weird with your picture');</script>";
+            }
+            else
+            {
+                string img = Path.Combine(_environment.WebRootPath, "img");
+                
+                using (var fileStream = new FileStream(Path.Combine(img, product.ImageFile.FileName), FileMode.Create))
+                {
+                    await product.ImageFile.CopyToAsync(fileStream);
+                }
+
+                product.ImagePath = product.ImageFile.FileName;
+
+                _context.Add(product);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = product.ProductId });
 
-
+                }
 
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);

@@ -48,7 +48,8 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.DateCreated)
@@ -68,9 +69,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.City)
             </td>
+
             <td>
-                @Html.DisplayFor(modelItem => item.ImagePath)
-                @*<img src="" alt="Alternate Text" />*@
+                @{ if (item.ImagePath == null)
+                    {<p>No pic</p> }
+
+                    else if (item.ImagePath.Length > 0)
+                    { <img src="~/img/@item.ImagePath" height = "75" width = "75" />
+                }
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Active)
