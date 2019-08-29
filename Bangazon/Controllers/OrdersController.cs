@@ -200,13 +200,13 @@ namespace Bangazon.Controllers
             return View(orderHistoryList);
         }
 
-        public async Task<IActionResult> rateProduct(ProductRating productRating)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RateProduct(int rating)
         {
+            var productRating = new ProductRating();
             var user = await GetCurrentUserAsync();
             productRating.UserId = user.Id;
-
-            ViewData["Rating"] = new SelectList(Enumerable.Range(0, 6)
-                .Select(p => new SelectListItem() { Text = p.ToString(), Value = p.ToString() }));
 
             _context.Add(productRating);
             await _context.SaveChangesAsync();

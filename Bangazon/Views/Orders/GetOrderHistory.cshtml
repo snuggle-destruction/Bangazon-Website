@@ -32,37 +32,41 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCompleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentType.Description)
-            </td>
-            @foreach (var product in item.OrderProducts)
-            {
+        @foreach (var item in Model)
+        {
+            <tr>
                 <td>
-                    @product.Product.Title
+                    @Html.DisplayFor(modelItem => item.DateCreated)
                 </td>
                 <td>
-                    <div class="form-group">
-                        <label asp-for="" class="control-label"></label>
-                        <select asp-for="" class="form-control" asp-items="ViewBag.Rating"></select>
-                    </div>
-                    @product.Product.Ratings/5
+                    @Html.DisplayFor(modelItem => item.DateCompleted)
                 </td>
-            }
-            <td>
-                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a>
-            </td>
-        </tr>
-}
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentType.Description)
+                </td>
+                @foreach (var product in item.OrderProducts)
+                {
+                    <td>
+                        @product.Product.Title
+                    </td>
+                    <td>
+                        <form asp-action="RateProduct" enctype="multipart/form-data">
+                            <input type="submit" value="Rate" class="btn btn-primary" />
+                            <div class="form-group">
+                                <label class="control-label"></label>
+                                <select class="form-control" asp-items="ViewBag.Rating"></select>
+                            </div>
+                            @product.Product.Ratings/5
+                        </form>
+                    </td>
+                }
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.OrderId">Details</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
