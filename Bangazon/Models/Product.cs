@@ -67,6 +67,5 @@ namespace Bangazon.Models
         {
             Active = true;
         }
-
     }
 }

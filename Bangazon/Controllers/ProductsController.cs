@@ -283,6 +283,22 @@ namespace Bangazon.Controllers
 
         }
 
+        public async Task<IActionResult> GetUserProducts(ApplicationUser user)
+        {
+            var userProducts = await _context.Product
+                .Where(p => p.UserId == user.Id)
+                .Include(p => p.OrderProducts)
+                .ThenInclude(op => op.Order)
+                .ToListAsync();
+
+            return View(userProducts);
+        }
+        public void AddFavoriteSeller(ApplicationUser seller)
+        {
+            var user = GetCurrentUserAsync().Result;
+            user.FavoriteSellers.Add(seller);
+        }
+
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);
