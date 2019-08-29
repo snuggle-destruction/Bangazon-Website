@@ -58,6 +58,12 @@ namespace Bangazon.Controllers
                 .Include(p => p.ProductType)
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
+
+            var orderProduct = await _context.OrderProduct
+                .Include(op => op.Order)
+                .Where(op => op.ProductId == id && op.Order.DateCompleted != null).ToListAsync();
+            product.OrderProducts = orderProduct;
+
             if (product == null)
             {
                 return NotFound();

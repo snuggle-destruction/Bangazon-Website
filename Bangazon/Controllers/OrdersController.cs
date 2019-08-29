@@ -222,14 +222,12 @@ namespace Bangazon.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        //Shelley Do Work Here
-        public async Task<IActionResult> AddToOrder()
-        {
-            var user = await GetCurrentUserAsync();
-            var addToCart = _context.OrderProduct;
+        //public async Task<IActionResult> RemainingProduct(int qty, int id)
+        //{
+        //    var productQty = await _context.Product
+        //        .Where(p => p.ProductId == id);
 
-
-            return View();
-        }
+        //    return View();
+        //}
     }
 }
