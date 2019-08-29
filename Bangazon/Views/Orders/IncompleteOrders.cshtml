@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Bangazon.Models.Order>
+
+@{
+    ViewData["Title"] = "IncompleteOrders";
+}
+
+<h1>Incomplete Orders</h1>
+
+<table class="table">
+
+
+
+    @foreach (var item in Model)
+    {
+        <br />
+        <h4>@Html.DisplayFor(model => item.User.UserName)</h4>
+        <br />
+        <h5>Order @Html.DisplayFor(model => item.OrderId)</h5>
+        <br />
+        foreach (var op in item.OrderProducts)
+        {
+            @Html.DisplayFor(modelItem => op.Product.Title)
+            <br />
+        }
+    }
+
+</table>

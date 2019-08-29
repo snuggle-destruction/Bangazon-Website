@@ -27,7 +27,9 @@ namespace Bangazon.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
+            var applicationDbContext = _context.Order
+                .Include(o => o.PaymentType)
+                .Include(o => o.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -146,6 +148,8 @@ namespace Bangazon.Controllers
             var order = await _context.Order
                 .Include(o => o.PaymentType)
                 .Include(o => o.User)
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Order)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {
@@ -166,6 +170,22 @@ namespace Bangazon.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        private bool OrderExists(int id)
+        {
+            return _context.Order.Any(e => e.OrderId == id);
+        }
+
+        private Task<ApplicationUser> GetUserAsync()
+        {
+            return _userManager.GetUserAsync(HttpContext.User);
+        }
+
+        private async Task<bool> WasCreatedByUser(Order order)
+        {
+            var user = await GetUserAsync();
+            return order.UserId == user.Id;
+        }
+
         public async Task<IActionResult> GetOrderHistory()
         {
             var user = await GetCurrentUserAsync();
@@ -180,16 +200,33 @@ namespace Bangazon.Controllers
             return View(orderHistoryList);
         }
 
+        public async Task<IActionResult> ReportsIndex()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> IncompleteOrders()
+        {
+            var applicationDbContext = _context.Order
+            .Include(o => o.User)
+            .Include(o => o.OrderProducts)
+            .ThenInclude(op => op.Product);
+            return View(await applicationDbContext.ToListAsync());
+        }
+        public async Task<IActionResult> MultipleOrders()
+        {
+            var applicationDbContext = _context.Order
+            .Include(o => o.User)
+            .Include(o => o.OrderProducts)
+            .ThenInclude(op => op.Product);
+            return View(await applicationDbContext.ToListAsync());
+        }
+
         public async Task<IActionResult> AddToOrder()
         {
             var user = await GetCurrentUserAsync();
             
             return View();
-        }
-
-        private bool OrderExists(int id)
-        {
-            return _context.Order.Any(e => e.OrderId == id);
         }
     }
 }
