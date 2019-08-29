@@ -27,12 +27,9 @@ namespace Bangazon.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-
             var applicationDbContext = _context.Order
-                    .Include(o => o.User)
-                    .Include(o => o.OrderProducts)
-                    .Where(o => o.DateCompleted == null);
-                    //.FirstOrDefaultAsync();
+                .Include(o => o.PaymentType)
+                .Include(o => o.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -167,10 +164,7 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var orderedProduct = await _context.OrderProduct.FirstOrDefaultAsync(o => o.OrderId == id);
-
-            var order = await _context.Order.FirstOrDefaultAsync(o => o.OrderId == orderedProduct.OrderId);
-            _context.OrderProduct.RemoveRange(orderedProduct);
+            var order = await _context.Order.FindAsync(id);
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -204,6 +198,19 @@ namespace Bangazon.Controllers
                 .ToListAsync();
 
             return View(orderHistoryList);
+        }
+
+        public async Task<IActionResult> rateProduct(ProductRating productRating)
+        {
+            var user = await GetCurrentUserAsync();
+            productRating.UserId = user.Id;
+
+            ViewData["Rating"] = new SelectList(Enumerable.Range(0, 6)
+                .Select(p => new SelectListItem() { Text = p.ToString(), Value = p.ToString() }));
+
+            _context.Add(productRating);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> ReportsIndex()
