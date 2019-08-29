@@ -35,7 +35,7 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> Index(string searchString)
         {
             //var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
-            //return View(await applicationDbContext.ToListAsync());
+            //return View(await applicationDbContext.ToListAsync());         
 
             var products = from p in _context.Product
                          select p;
@@ -86,16 +86,23 @@ namespace Bangazon.Controllers
         {
             if (ModelState.IsValid)
             { }
-         
+
+            if (product.ImageFile == null)
+            {
+                _context.Add(product);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", new { id = product.ProductId });
+            }
+
             if (product.ImageFile.Length == 0 || product.ImageFile.Length > 5120000)
             {
                 TempData["msg"] = "<script>alert('Something weird with your picture');</script>";
-                
             }
             else
             {
                 string img = Path.Combine(_environment.WebRootPath, "img");
-
+                
                 using (var fileStream = new FileStream(Path.Combine(img, product.ImageFile.FileName), FileMode.Create))
                 {
                     await product.ImageFile.CopyToAsync(fileStream);
