@@ -245,7 +245,7 @@ namespace Bangazon.Controllers
             var user = await GetCurrentUserAsync();
 
             var productStatus = await _context.Product
-                .Where(p => p.UserId == user.Id && p.Active == true)
+                .Where(p => p.UserId == user.Id)
                 .Include(p => p.OrderProducts)
                 .ThenInclude(op => op.Order)
                 .ToListAsync();
