@@ -4,11 +4,8 @@
     ViewData["Title"] = "MultipleOrders";
 }
 
-<h1>MultipleOrders</h1>
+<h1>Multiple Orders</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -19,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.User.LastName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                @Html.DisplayNameFor(model => model)
             </th>
             <th></th>
         </tr>
@@ -34,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.User.LastName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
+                @Html.DisplayFor(modelItem => item.OrderProducts.Count)
             </td>
         </tr>
 }
