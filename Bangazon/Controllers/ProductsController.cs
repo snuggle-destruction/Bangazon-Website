@@ -9,6 +9,9 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Bangazon.Models.ProductViewModels;
 using Microsoft.AspNetCore.Identity;
+using System.IO;
+using static System.Net.WebRequestMethods;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Bangazon.Controllers
 {
@@ -16,11 +19,14 @@ namespace Bangazon.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHostingEnvironment _environment;
         public ProductsController(ApplicationDbContext context,
-                          UserManager<ApplicationUser> userManager)
+                          UserManager<ApplicationUser> userManager,
+                          IHostingEnvironment environment)
         {
             _userManager = userManager;
             _context = context;
+            _environment = environment;
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
@@ -28,8 +34,14 @@ namespace Bangazon.Controllers
         // GET: Products
         public async Task<IActionResult> Index(string searchString)
         {
+<<<<<<< HEAD
+=======
+            //var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
+            //return View(await applicationDbContext.ToListAsync());         
+
+>>>>>>> master
             var products = from p in _context.Product
-                         select p;
+                           select p;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -74,22 +86,50 @@ namespace Bangazon.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
+<<<<<<< HEAD
         public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,SoldLocally,ImagePath,Active,ProductTypeId")]Product product)
+=======
+        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,ImageFile,Active,ProductTypeId")]Product product)
+>>>>>>> master
         {
             if (ModelState.IsValid)
             { }
+
+            if (product.ImageFile == null)
+            {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
 
+                return RedirectToAction("Details", new { id = product.ProductId });
+            }
+
+            if (product.ImageFile.Length == 0 || product.ImageFile.Length > 5120000)
+            {
+                TempData["msg"] = "<script>alert('Something weird with your picture');</script>";
+            }
+            else
+            {
+                string img = Path.Combine(_environment.WebRootPath, "img");
+                
+                using (var fileStream = new FileStream(Path.Combine(img, product.ImageFile.FileName), FileMode.Create))
+                {
+                    await product.ImageFile.CopyToAsync(fileStream);
+                }
+
+                product.ImagePath = product.ImageFile.FileName;
+
+                _context.Add(product);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction("Details", new { id = product.ProductId });
 
-
+                }
 
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
             return View(product);
         }
- 
+
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -116,6 +156,9 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,Active,ProductTypeId")] Product product)
         {
+            ModelState.Remove("UserId");
+            ModelState.Remove("User");
+
             if (id != product.ProductId)
             {
                 return NotFound();
@@ -171,10 +214,46 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var orderedProduct = await _context.OrderProduct.FirstOrDefaultAsync(o => o.ProductId == id);
             var product = await _context.Product.FindAsync(id);
-            _context.Product.Remove(product);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            if (orderedProduct != null)
+            {
+                var order = await _context.Order.FirstOrDefaultAsync(o => o.OrderId == orderedProduct.OrderId);
+
+                if (order.DateCompleted == null)
+                {
+                    _context.Product.Remove(product);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    try
+                    {
+                        product.Active = false;
+                        _context.Update(product);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!ProductExists(product.ProductId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+            } else
+            {
+                _context.Product.Remove(product);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         public async Task<IActionResult> Types()
@@ -204,7 +283,7 @@ namespace Bangazon.Controllers
             var user = await GetCurrentUserAsync();
 
             var productStatus = await _context.Product
-                .Where(p => p.UserId == user.Id && p.Active == true)
+                .Where(p => p.UserId == user.Id)
                 .Include(p => p.OrderProducts)
                 .ThenInclude(op => op.Order)
                 .ToListAsync();

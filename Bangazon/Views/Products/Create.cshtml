@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Create";
 }
+@Html.Raw(TempData["msg"])
 
 
 <h1>Create</h1>
@@ -11,7 +12,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form method="post" asp-controller="Products" asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -50,9 +51,9 @@
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImagePath" class="control-label"></label>
-                <input asp-for="ImagePath" class="form-control" />
-                <span asp-validation-for="ImagePath" class="text-danger"></span>
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" class="form-control" type="file" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
