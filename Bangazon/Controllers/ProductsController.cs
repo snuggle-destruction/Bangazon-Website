@@ -86,24 +86,29 @@ namespace Bangazon.Controllers
         {
             if (ModelState.IsValid)
             { }
-
-
-            string img = Path.Combine(_environment.WebRootPath, "img");
-            if (product.ImageFile.Length > 0)
+         
+            if (product.ImageFile.Length == 0 || product.ImageFile.Length > 5120000)
             {
+                TempData["msg"] = "<script>alert('Something weird with your picture');</script>";
+                
+            }
+            else
+            {
+                string img = Path.Combine(_environment.WebRootPath, "img");
+
                 using (var fileStream = new FileStream(Path.Combine(img, product.ImageFile.FileName), FileMode.Create))
                 {
                     await product.ImageFile.CopyToAsync(fileStream);
                 }
-            }
-            product.ImagePath = product.ImageFile.FileName;
 
-            _context.Add(product);
+                product.ImagePath = product.ImageFile.FileName;
+
+                _context.Add(product);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = product.ProductId });
 
-
+                }
 
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
