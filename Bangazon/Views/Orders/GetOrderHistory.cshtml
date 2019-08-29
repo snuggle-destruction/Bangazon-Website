@@ -22,6 +22,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.PaymentType.Description)
             </th>
+            <th>
+                Products
+            </th>
+            <th>
+                Rating
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -40,6 +46,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.PaymentType.Description)
             </td>
+            @foreach (var product in item.OrderProducts)
+            {
+                <td>
+                    @product.Product.Title
+                </td>
+                <td>
+                    @product.Product.Ratings/5
+                </td>
+            }
             <td>
                 <a asp-action="Details" asp-route-id="@item.OrderId">Details</a>
             </td>

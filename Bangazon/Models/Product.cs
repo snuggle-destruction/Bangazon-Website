@@ -61,6 +61,9 @@ namespace Bangazon.Models
 
         public ProductType ProductType { get; set; }
 
+        [Display(Name = "Rating")]
+        public virtual ICollection<ProductRating> Ratings { get; set; }
+
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
 
         public Product()
