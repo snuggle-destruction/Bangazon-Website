@@ -180,6 +180,13 @@ namespace Bangazon.Controllers
             return View(orderHistoryList);
         }
 
+        public async Task<IActionResult> AddToOrder()
+        {
+            var user = await GetCurrentUserAsync();
+            
+            return View();
+        }
+
         private bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.OrderId == id);
