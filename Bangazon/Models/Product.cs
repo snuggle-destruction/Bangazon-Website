@@ -18,10 +18,14 @@ namespace Bangazon.Models
 
         [Required]
         [StringLength(255)]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$",
+         ErrorMessage = "Special Characters are not allowed.")]
         public string Description { get; set; }
 
         [Required]
         [StringLength(55, ErrorMessage="Please shorten the product title to 55 characters")]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$",
+         ErrorMessage = "Special Characters are not allowed.")]
         public string Title { get; set; }
 
         [Required]
