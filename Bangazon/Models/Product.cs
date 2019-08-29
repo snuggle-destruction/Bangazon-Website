@@ -49,6 +49,7 @@ namespace Bangazon.Models
        
 
         public bool Active { get; set; }
+        public bool SoldLocally { get; set; }
 
         [Required]
         [Display(Name = "Seller")]
@@ -62,7 +63,7 @@ namespace Bangazon.Models
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
 
-        public Product ()
+        public Product()
         {
             Active = true;
         }
