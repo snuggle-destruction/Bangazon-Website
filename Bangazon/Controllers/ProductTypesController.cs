@@ -66,7 +66,7 @@ namespace Bangazon.Controllers
             return View(productType);
         }
 
-        // GET: ProductTypes/Edit/5
+        // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,12 +74,14 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
-            var productType = await _context.ProductType.FindAsync(id);
-            if (productType == null)
+            var order = await _context.Order.FindAsync(id);
+            if (order == null)
             {
                 return NotFound();
             }
-            return View(productType);
+            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
+            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
+            return View(order);
         }
 
         // POST: ProductTypes/Edit/5

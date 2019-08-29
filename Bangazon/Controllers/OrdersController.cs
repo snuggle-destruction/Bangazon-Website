@@ -27,9 +27,12 @@ namespace Bangazon.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
+
             var applicationDbContext = _context.Order
-                .Include(o => o.PaymentType)
-                .Include(o => o.User);
+                    .Include(o => o.User)
+                    .Include(o => o.OrderProducts)
+                    .Where(o => o.DateCompleted == null);
+                    //.FirstOrDefaultAsync();
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -164,7 +167,10 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var order = await _context.Order.FindAsync(id);
+            var orderedProduct = await _context.OrderProduct.FirstOrDefaultAsync(o => o.OrderId == id);
+
+            var order = await _context.Order.FirstOrDefaultAsync(o => o.OrderId == orderedProduct.OrderId);
+            _context.OrderProduct.RemoveRange(orderedProduct);
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
