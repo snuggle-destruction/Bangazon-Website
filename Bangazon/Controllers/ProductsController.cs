@@ -38,7 +38,7 @@ namespace Bangazon.Controllers
             //return View(await applicationDbContext.ToListAsync());         
 
             var products = from p in _context.Product
-                         select p;
+                           select p;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -121,7 +121,7 @@ namespace Bangazon.Controllers
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
             return View(product);
         }
- 
+
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -148,6 +148,9 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,Active,ProductTypeId")] Product product)
         {
+            ModelState.Remove("UserId");
+            ModelState.Remove("User");
+
             if (id != product.ProductId)
             {
                 return NotFound();
@@ -203,10 +206,46 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var orderedProduct = await _context.OrderProduct.FirstOrDefaultAsync(o => o.ProductId == id);
             var product = await _context.Product.FindAsync(id);
-            _context.Product.Remove(product);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            if (orderedProduct != null)
+            {
+                var order = await _context.Order.FirstOrDefaultAsync(o => o.OrderId == orderedProduct.OrderId);
+
+                if (order.DateCompleted == null)
+                {
+                    _context.Product.Remove(product);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    try
+                    {
+                        product.Active = false;
+                        _context.Update(product);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!ProductExists(product.ProductId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+            } else
+            {
+                _context.Product.Remove(product);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         public async Task<IActionResult> Types()
@@ -236,7 +275,7 @@ namespace Bangazon.Controllers
             var user = await GetCurrentUserAsync();
 
             var productStatus = await _context.Product
-                .Where(p => p.UserId == user.Id && p.Active == true)
+                .Where(p => p.UserId == user.Id)
                 .Include(p => p.OrderProducts)
                 .ThenInclude(op => op.Order)
                 .ToListAsync();
