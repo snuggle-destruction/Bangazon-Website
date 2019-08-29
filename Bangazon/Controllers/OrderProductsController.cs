@@ -128,7 +128,7 @@ namespace Bangazon.Controllers
         }
 
         // GET: OrderProducts/Delete/5
-        public async Task<IActionResult> DeleteOrderProduct(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -150,7 +150,7 @@ namespace Bangazon.Controllers
         // POST: OrderProducts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteOrderProductConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var orderProduct = await _context.OrderProduct.FindAsync(id);
             _context.OrderProduct.Remove(orderProduct);
