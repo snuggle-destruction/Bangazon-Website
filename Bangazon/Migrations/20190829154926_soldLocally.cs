@@ -10,7 +10,7 @@ namespace Bangazon.Migrations
             migrationBuilder.AddColumn<Boolean>(
                 name: "SoldLocally",
                 table: "Product",
-                nullable: true,
+                nullable: false,
                 defaultValue: false);
         }
     }

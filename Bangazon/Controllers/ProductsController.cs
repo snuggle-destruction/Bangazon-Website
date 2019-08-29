@@ -34,12 +34,6 @@ namespace Bangazon.Controllers
         // GET: Products
         public async Task<IActionResult> Index(string searchString)
         {
-<<<<<<< HEAD
-=======
-            //var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
-            //return View(await applicationDbContext.ToListAsync());         
-
->>>>>>> master
             var products = from p in _context.Product
                            select p;
 
@@ -86,11 +80,8 @@ namespace Bangazon.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-<<<<<<< HEAD
         public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,SoldLocally,ImagePath,Active,ProductTypeId")]Product product)
-=======
-        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,ImageFile,Active,ProductTypeId")]Product product)
->>>>>>> master
+
         {
             if (ModelState.IsValid)
             { }
