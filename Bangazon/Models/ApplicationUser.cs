@@ -28,5 +28,12 @@ namespace Bangazon.Models
         public virtual ICollection<Order> Orders { get; set; }
 
         public virtual ICollection<PaymentType> PaymentTypes { get; set; }
+
+        [Display(Name = "Full Name")]
+        public string FullName
+        {
+            get
+            { return $"{FirstName} {LastName}"; }
+        }
     }
 }

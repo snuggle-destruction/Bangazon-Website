@@ -224,6 +224,20 @@ namespace Bangazon.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> GetProductStatus()
+        {
+            var user = await GetCurrentUserAsync();
+
+            var productStatus = await _context.Product
+                .Where(p => p.UserId == user.Id && p.Active == true)
+                .Include(p => p.OrderProducts)
+                .ThenInclude(op => op.Order)
+                .ToListAsync();
+
+            return View(productStatus);
+
+        }
+
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);

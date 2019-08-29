@@ -4,14 +4,16 @@ using Bangazon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bangazon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190827162620_ExpirationDate")]
+    partial class ExpirationDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +85,7 @@ namespace Bangazon.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2bbb9667-0b02-4bee-b55c-32829c24f691",
+                            ConcurrencyStamp = "eda94fd2-de3e-4998-97ed-b8cbcc878be1",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Admina",
@@ -91,7 +93,7 @@ namespace Bangazon.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKvEwUmjdz/BGQHKboIhbIHK3M1eyrxD3xwufHgwjwx3TbPpVmsnZDT2YlzbhmAhwg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHtytsxkugFIHG2K8iIQzLNZACIoXFnSOGP8LuZweDCxgW/7I6Yi1dAXMrgX/NAv1w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             StreetAddress = "123 Infinity Way",
@@ -131,14 +133,6 @@ namespace Bangazon.Migrations
                             OrderId = 1,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = "00000000-ffff-ffff-ffff-ffffffffffff"
-                        },
-                        new
-                        {
-                            OrderId = 2,
-                            DateCompleted = new DateTime(2019, 8, 17, 0, 0, 0, 0, DateTimeKind.Local),
-                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PaymentTypeId = 2,
-                            UserId = "00000000-ffff-ffff-ffff-ffffffffffff"
                         });
                 });
 
@@ -170,7 +164,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             OrderProductId = 2,
-                            OrderId = 2,
+                            OrderId = 1,
                             ProductId = 2
                         });
                 });
