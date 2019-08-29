@@ -148,6 +148,8 @@ namespace Bangazon.Controllers
             var order = await _context.Order
                 .Include(o => o.PaymentType)
                 .Include(o => o.User)
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Order)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {
@@ -168,6 +170,22 @@ namespace Bangazon.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        private bool OrderExists(int id)
+        {
+            return _context.Order.Any(e => e.OrderId == id);
+        }
+
+        private Task<ApplicationUser> GetUserAsync()
+        {
+            return _userManager.GetUserAsync(HttpContext.User);
+        }
+
+        private async Task<bool> WasCreatedByUser(Order order)
+        {
+            var user = await GetUserAsync();
+            return order.UserId == user.Id;
+        }
+
         public async Task<IActionResult> GetOrderHistory()
         {
             var user = await GetCurrentUserAsync();
@@ -180,11 +198,6 @@ namespace Bangazon.Controllers
                 .ToListAsync();
 
             return View(orderHistoryList);
-        }
-
-        private bool OrderExists(int id)
-        {
-            return _context.Order.Any(e => e.OrderId == id);
         }
 
         public async Task<IActionResult> ReportsIndex()
