@@ -213,6 +213,13 @@ namespace Bangazon.Controllers
             .ThenInclude(op => op.Product);
             return View(await applicationDbContext.ToListAsync());
         }
-
+        public async Task<IActionResult> MultipleOrders()
+        {
+            var applicationDbContext = _context.Order
+            .Include(o => o.User)
+            .Include(o => o.OrderProducts)
+            .ThenInclude(op => op.Product);
+            return View(await applicationDbContext.ToListAsync());
+        }
     }
 }
