@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bangazon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190828205027_sellLocal")]
-    partial class sellLocal
+    [Migration("20190829143644_soldLocally")]
+    partial class soldLocally
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -85,7 +85,7 @@ namespace Bangazon.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2a307d73-37a1-4d5f-b10f-5d94409f7812",
+                            ConcurrencyStamp = "c2200cd5-17a7-4c75-899a-08de5440d8f3",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Admina",
@@ -93,7 +93,7 @@ namespace Bangazon.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENJUoUUluH9K9dlF62ac28wxk01Yprb5JsGWIQMFxEoeHiuU8o7Dgbi0WfuXHCvgzA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFJoeHhOxImUr3bjwF9xaVLslOGUs/y/xvyunF4TU5CZPSAqz9zgCGXRaM4UclFDeQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             StreetAddress = "123 Infinity Way",
@@ -137,7 +137,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             OrderId = 2,
-                            DateCompleted = new DateTime(2019, 8, 18, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateCompleted = new DateTime(2019, 8, 19, 0, 0, 0, 0, DateTimeKind.Local),
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PaymentTypeId = 2,
                             UserId = "00000000-ffff-ffff-ffff-ffffffffffff"
@@ -274,7 +274,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             ProductId = 1,
-                            Active = false,
+                            Active = true,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It flies high",
                             Price = 2.9900000000000002,
@@ -287,7 +287,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             ProductId = 2,
-                            Active = false,
+                            Active = true,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It rolls fast",
                             Price = 29.989999999999998,
@@ -300,7 +300,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             ProductId = 3,
-                            Active = false,
+                            Active = true,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It cuts things",
                             Price = 31.489999999999998,
@@ -313,7 +313,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             ProductId = 4,
-                            Active = false,
+                            Active = true,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It puts holes in things",
                             Price = 24.890000000000001,
@@ -326,7 +326,7 @@ namespace Bangazon.Migrations
                         new
                         {
                             ProductId = 5,
-                            Active = false,
+                            Active = true,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It puts things together",
                             Price = 22.690000000000001,
