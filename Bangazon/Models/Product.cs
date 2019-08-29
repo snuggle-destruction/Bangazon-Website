@@ -37,6 +37,7 @@ namespace Bangazon.Models
         [Required]
         public int Quantity { get; set; }
 
+
         [Required]
         public string UserId {get; set;}
 
@@ -68,5 +69,13 @@ namespace Bangazon.Models
             Active = true;
         }
 
+        [NotMapped]
+        public int QuantityRemaining
+        {
+            get
+            {
+                return Quantity - OrderProducts.Count;
+            }
+        }
     }
 }

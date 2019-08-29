@@ -227,5 +227,13 @@ namespace Bangazon.Controllers
             .ThenInclude(op => op.Product);
             return View(await applicationDbContext.ToListAsync());
         }
+
+        //public async Task<IActionResult> RemainingProduct(int qty, int id)
+        //{
+        //    var productQty = await _context.Product
+        //        .Where(p => p.ProductId == id);
+
+        //    return View();
+        //}
     }
 }
