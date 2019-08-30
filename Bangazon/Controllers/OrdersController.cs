@@ -27,11 +27,12 @@ namespace Bangazon.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
+            var user = await GetCurrentUserAsync();
 
             var applicationDbContext = _context.Order
                     .Include(o => o.User)
                     .Include(o => o.OrderProducts)
-                    .Where(o => o.DateCompleted == null);
+                    .Where(o => o.DateCompleted == null && o.UserId == user.Id);
                     //.FirstOrDefaultAsync();
             return View(await applicationDbContext.ToListAsync());
         }
@@ -55,6 +56,11 @@ namespace Bangazon.Controllers
             {
                 return NotFound();
             }
+
+            var currentUserId = GetCurrentUserAsync().GetAwaiter().GetResult().Id;
+
+            ViewData["PaymentTypes"] = _context.PaymentType.Count(x => x.UserId == currentUserId);
+            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "Description");
 
             return View(order);
         }
@@ -254,6 +260,26 @@ namespace Bangazon.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> CompleteOrder(int OrderId, int PaymentTypeId)
+        {
+            var order = _context.Order.FirstOrDefault(x => x.OrderId == OrderId);
+            if(order != null)
+            {
+                order.PaymentTypeId = PaymentTypeId;
+                order.DateCompleted = DateTime.Now;
+                _context.Update(order);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return RedirectToAction("Create", "PaymentTypes");
+            }
+
+            return RedirectToAction("GetOrderHistory");
+
+
         }
     }
 }

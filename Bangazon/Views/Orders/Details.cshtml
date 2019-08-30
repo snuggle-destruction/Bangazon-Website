@@ -1,4 +1,7 @@
 ﻿@model Bangazon.Models.Order
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Details";
@@ -73,11 +76,32 @@
 
 @if (Model.DateCompleted == null)
 {
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.OrderId">Edit</a>
-        <span> | </span>
-        <a asp-action="Index">Back to List</a>
-    </div>
+    @if (ViewBag.PaymentTypes > 0)
+    {
+        @using (Html.BeginForm("CompleteOrder", "Orders", FormMethod.Post))
+        {
+            <input type="hidden" asp-for="OrderId" />
+
+            <div class="form-group">
+                <label asp-for="PaymentType.Description" class="control-label"></label>
+                <select asp-for="PaymentTypeId" class="form-control" asp-items="ViewBag.PaymentTypeId"></select>
+            </div>
+            <div>
+                <input class="btn btn-danger" type="submit" value="Checkout" />
+                <span> | </span>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        }
+    }
+    else
+    {
+        <input type="hidden" asp-for="OrderId" />
+        <div>
+        <a asp-controller="PaymentTypes" asp-action="Create">Add a payment</a>
+        </div>
+
+
+    }
 }
 else
 {
