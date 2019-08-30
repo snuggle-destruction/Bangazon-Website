@@ -61,7 +61,7 @@
         </dt>
         <dd class="col-sm-10">
             @{ if (Model.ImagePath == null)
-                {<p>No pic</p> }
+                {<img src="~/img/no picture.jpg" height="75" width="75" /> }
 
                 else if (Model.ImagePath.Length > 0)
                 { <img src="~/img/@Model.ImagePath" height="75" width="75" />
