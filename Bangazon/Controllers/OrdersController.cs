@@ -228,12 +228,32 @@ namespace Bangazon.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        //public async Task<IActionResult> RemainingProduct(int qty, int id)
-        //{
-        //    var productQty = await _context.Product
-        //        .Where(p => p.ProductId == id);
+        public async Task<Order> CreateOrder()
+        {
+            var order = new Order();
+            order.UserId = GetCurrentUserAsync().GetAwaiter().GetResult().Id;
+            _context.Add(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
 
-        //    return View();
-        //}
+        public async Task<IActionResult> AddToCart(int ProductId)
+        {
+            var currentUserId = GetCurrentUserAsync().GetAwaiter().GetResult().Id;
+            var order = _context.Order.FirstOrDefault(x => x.UserId == currentUserId && x.DateCompleted == null);
+
+            if(order == null)
+            {
+                order = CreateOrder().GetAwaiter().GetResult();
+            }
+
+            var orderProduct = new OrderProduct();
+            orderProduct.OrderId = order.OrderId;
+            orderProduct.ProductId = ProductId;
+            _context.Add(orderProduct);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
     }
 }
