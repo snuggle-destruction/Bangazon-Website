@@ -12,6 +12,7 @@ namespace Bangazon.Models
         [Key]
         public int ProductRatingId { get; set; }
 
+        [Display(Name = "Product Rating")]
         [Required]
         public int ProductId { get; set; }
 
