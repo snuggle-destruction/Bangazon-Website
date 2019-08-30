@@ -30,11 +30,18 @@ namespace Bangazon.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
-            var applicationDbContext = _context.Order
+            var orders = _context.Order
                     .Include(o => o.User)
                     .Include(o => o.OrderProducts)
                     .Where(o => user.Id == o.UserId && o.DateCompleted == null);
-            return View(await applicationDbContext.ToListAsync());
+                if (orders != null)
+                {
+                    return View(await orders.ToListAsync());
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             else
             {
