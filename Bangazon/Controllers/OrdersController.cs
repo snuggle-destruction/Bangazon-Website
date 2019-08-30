@@ -27,7 +27,6 @@ namespace Bangazon.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
@@ -42,6 +41,7 @@ namespace Bangazon.Controllers
             {
                 return NotFound();
             }
+
         }
 
         // GET: Orders/Details/5
@@ -63,6 +63,11 @@ namespace Bangazon.Controllers
             {
                 return NotFound();
             }
+
+            var currentUserId = GetCurrentUserAsync().GetAwaiter().GetResult().Id;
+
+            ViewData["PaymentTypes"] = _context.PaymentType.Count(x => x.UserId == currentUserId);
+            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "Description");
 
             return View(order);
         }
@@ -249,12 +254,52 @@ namespace Bangazon.Controllers
             return View(abandoned);
         }
 
-        //public async Task<IActionResult> RemainingProduct(int qty, int id)
-        //{
-        //    var productQty = await _context.Product
-        //        .Where(p => p.ProductId == id);
+        public async Task<Order> CreateOrder()
+        {
+            var order = new Order();
+            order.UserId = GetCurrentUserAsync().GetAwaiter().GetResult().Id;
+            _context.Add(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
 
-        //    return View();
-        //}
+        public async Task<IActionResult> AddToCart(int ProductId)
+        {
+            var currentUserId = GetCurrentUserAsync().GetAwaiter().GetResult().Id;
+            var order = _context.Order.FirstOrDefault(x => x.UserId == currentUserId && x.DateCompleted == null);
+
+            if(order == null)
+            {
+                order = CreateOrder().GetAwaiter().GetResult();
+            }
+
+            var orderProduct = new OrderProduct();
+            orderProduct.OrderId = order.OrderId;
+            orderProduct.ProductId = ProductId;
+            _context.Add(orderProduct);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> CompleteOrder(int OrderId, int PaymentTypeId)
+        {
+            var order = _context.Order.FirstOrDefault(x => x.OrderId == OrderId);
+            if(order != null)
+            {
+                order.PaymentTypeId = PaymentTypeId;
+                order.DateCompleted = DateTime.Now;
+                _context.Update(order);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return RedirectToAction("Create", "PaymentTypes");
+            }
+
+            return RedirectToAction("GetOrderHistory");
+
+
+        }
     }
 }
