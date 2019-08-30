@@ -28,25 +28,21 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if (user != null)
-            {
+            //if (user != null)
+            //{
             var orders = _context.Order
                     .Include(o => o.User)
+                    .ThenInclude(u => u.PaymentTypes)
                     .Include(o => o.OrderProducts)
                     .Where(o => user.Id == o.UserId && o.DateCompleted == null);
-                if (orders != null)
-                {
+
                     return View(await orders.ToListAsync());
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return NotFound();
-            }
+
+            //}
+            //else
+            //{
+            //    return NotFound();
+            //}
         }
 
         // GET: Orders/Details/5
@@ -229,7 +225,8 @@ namespace Bangazon.Controllers
             var applicationDbContext = _context.Order
             .Include(o => o.User)
             .Include(o => o.OrderProducts)
-            .ThenInclude(op => op.Product);
+            .ThenInclude(op => op.Product)
+            .Where(o => o.DateCompleted == null);
             return View(await applicationDbContext.ToListAsync());
         }
         public async Task<IActionResult> MultipleOrders()
@@ -239,6 +236,18 @@ namespace Bangazon.Controllers
             .Include(o => o.OrderProducts)
             .ThenInclude(op => op.Product);
             return View(await applicationDbContext.ToListAsync());
+        }
+        public async Task<IActionResult> AbandonedProducts()
+        {
+            var abandoned = _context.Order
+            .Include(o => o.OrderProducts)
+            .ThenInclude(op => op.Product)
+            .ThenInclude(p => p.ProductType)
+            .Where(o => o.DateCompleted == null)
+            .GroupBy(o => o.OrderProducts.Count)
+            .ToList();
+            //.OrderByDescending(o => o.OrderProducts.Count);
+            return View(abandoned);
         }
 
         //public async Task<IActionResult> RemainingProduct(int qty, int id)
