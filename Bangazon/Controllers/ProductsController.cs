@@ -64,6 +64,7 @@ namespace Bangazon.Controllers
                 .Where(op => op.ProductId == id && op.Order.DateCompleted != null).ToListAsync();
             product.OrderProducts = orderProduct;
 
+            
             if (product == null)
             {
                 return NotFound();
@@ -283,6 +284,7 @@ namespace Bangazon.Controllers
                 .Where(p => p.UserId == user.Id)
                 .Include(p => p.OrderProducts)
                 .ThenInclude(op => op.Order)
+                .Include(p => p.Ratings)
                 .ToListAsync();
 
             return View(productStatus);
