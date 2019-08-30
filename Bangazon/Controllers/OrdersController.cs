@@ -179,7 +179,16 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var order = await _context.Order.FindAsync(id);
+
+            var order = await _context.Order
+            .Include(o => o.PaymentType)
+            .Include(o => o.User)
+            .Include(o => o.OrderProducts)
+            .ThenInclude(op => op.Order)
+            .FirstOrDefaultAsync(m => m.OrderId == id);
+            var orderedProducts =  order.OrderProducts;
+
+            _context.OrderProduct.RemoveRange(orderedProducts);
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -237,6 +246,19 @@ namespace Bangazon.Controllers
             .Include(o => o.OrderProducts)
             .ThenInclude(op => op.Product);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> AbandonedProducts()
+        {
+            var abandoned = _context.Order
+            .Include(o => o.OrderProducts)
+            .ThenInclude(op => op.Product)
+            .ThenInclude(p => p.ProductType)
+            .Where(o => o.DateCompleted == null)
+            //.Select(o => new { count = o.OrderProducts.Count() })
+            .ToList();
+            //.OrderByDescending(o => o.OrderProducts.Count);
+            return View(abandoned);
         }
 
         public async Task<Order> CreateOrder()
