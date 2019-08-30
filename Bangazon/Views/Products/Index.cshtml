@@ -72,11 +72,11 @@
 
             <td>
                 @{ if (item.ImagePath == null)
-                    {<p>No pic</p> }
+                    {<img src="~/img/no picture.jpg" height="75" width="75" /> }
 
                     else if (item.ImagePath.Length > 0)
-                    { <img src="~/img/@item.ImagePath" height = "75" width = "75" />
-                }
+                    { <img src="~/img/@item.ImagePath" height="75" width="75" />
+                    }
                 }
             </td>
             <td>

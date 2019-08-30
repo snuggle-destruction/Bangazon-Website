@@ -5,8 +5,21 @@
 <span style="display:flex; flex-flow: row wrap">
     @foreach (var item in Model.Products)
     {
+    <span class="border m-3" style="width:150px; height:150px; display:flex; justify-content:center; align-items:center" >
         <a class="nav-link text-dark" asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">
-            @Html.DisplayFor(modelItem => item.Title)
+            @{ if (item.ImagePath == null)
+                {<img src="~/img/no picture.jpg" height="75" width="75" /> }
+
+                else if (item.ImagePath.Length > 0)
+                { <img src="~/img/@item.ImagePath" height="75" width="75" />
+                }
+            }
+            <br /> <br />
+                   <span class="border text-capitalize">
+                       @Html.DisplayFor(modelItem => item.Title)
+
+                   </span>
         </a>
+    </span>
     }
 </span>
