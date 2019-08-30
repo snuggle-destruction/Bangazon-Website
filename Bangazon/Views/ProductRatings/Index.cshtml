@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.Product.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
+                @Html.DisplayFor(modelItem => item.User.FullName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProductRatingId">Edit</a> |

@@ -90,8 +90,15 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,SoldLocally,ImagePath,ImageFile,Active,ProductTypeId")]Product product)
 
         {
+            var user = await GetCurrentUserAsync();
+            product.UserId = user.Id;
+
             if (ModelState.IsValid)
-            { }
+            {
+                _context.Add(product);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
 
             if (product.ImageFile == null)
             {

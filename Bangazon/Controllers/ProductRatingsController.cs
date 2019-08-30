@@ -42,9 +42,17 @@ namespace Bangazon.Controllers
                 .Include(p => p.Product)
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
+
             if (productRating == null)
             {
-                return NotFound();
+                var nullProductRating = new ProductRating();
+                nullProductRating.Product = await _context.Product
+                .Include(p => p.ProductType)
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(m => m.ProductId == id);
+                nullProductRating.User = await GetCurrentUserAsync();
+
+                return View(nullProductRating);
             }
 
             return View(productRating);
