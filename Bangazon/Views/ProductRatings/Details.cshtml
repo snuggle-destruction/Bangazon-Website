@@ -1,0 +1,45 @@
+﻿@model Bangazon.Models.ProductRating
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>ProductRating</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User.FullName)
+        </dd>
+    </dl>
+    <form asp-action="RateProduct" enctype="multipart/form-data">
+        <input type="hidden" value="@Model.Product.ProductId" id="productId" name="productId" />
+        <input type="submit" value="Rate" class="btn btn-primary" />
+        <div class="form-group">
+            <label class="control-label"></label>
+            <select class="form-control" id="rating" name="rating">
+                <option value="">Rate This Product</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+    </form>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ProductRatingId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

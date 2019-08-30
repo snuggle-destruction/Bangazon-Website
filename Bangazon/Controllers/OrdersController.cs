@@ -27,6 +27,7 @@ namespace Bangazon.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
+
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
@@ -178,7 +179,7 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            //var order = await _context.Order.FirstOrDefaultAsync(o => o.OrderId == id);
+
             var order = await _context.Order
             .Include(o => o.PaymentType)
             .Include(o => o.User)
@@ -222,6 +223,7 @@ namespace Bangazon.Controllers
 
             return View(orderHistoryList);
         }
+
 
         public async Task<IActionResult> ReportsIndex()
         {
