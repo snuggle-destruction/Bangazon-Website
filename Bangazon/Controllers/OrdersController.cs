@@ -202,11 +202,13 @@ namespace Bangazon.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RateProduct(int rating)
+        public async Task<IActionResult> RateProduct(int productId, int rating)
         {
             var productRating = new ProductRating();
             var user = await GetCurrentUserAsync();
             productRating.UserId = user.Id;
+            productRating.ProductId = productId;
+            productRating.Rating = rating;
 
             _context.Add(productRating);
             await _context.SaveChangesAsync();
