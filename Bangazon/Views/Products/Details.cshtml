@@ -84,7 +84,7 @@
             @Html.DisplayNameFor(model => model.ProductType)
         </dt>
         <dd class="col-sm-10">
-            <a asp-controller="Orders" asp-action="Details" asp-route-id="@Model.ProductTypeId">
+            <a asp-controller="ProductTypes" asp-action="Details" asp-route-id="@Model.ProductTypeId">
                 @Html.DisplayFor(model => model.ProductType.Label)
             </a>
         </dd>
@@ -103,7 +103,7 @@ else
     <a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a>
 }
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Products" asp-action="GetProductStatus">Back to List</a>
 </div>
 
 
