@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Bangazon.Models
 {
@@ -67,6 +68,9 @@ namespace Bangazon.Models
         [Display(Name = "Product Type")]
         public ProductType ProductType { get; set; }
 
+        [Display(Name = "Rating")]
+        public virtual ICollection<ProductRating> Ratings { get; set; }
+
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
 
         public Product()
@@ -88,6 +92,22 @@ namespace Bangazon.Models
                 {
                     return Quantity;
                 }
+            }
+        }
+
+        [NotMapped]
+        public double AvgRating
+        {
+            get
+            {
+                var pRatings = new List<int>();
+
+                foreach( var rating in Ratings)
+                {
+                    pRatings.Add(rating.Rating);
+                }
+
+                return pRatings.Average();
             }
         }
     }

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bangazon.Models
@@ -34,6 +36,24 @@ namespace Bangazon.Models
         {
             get
             { return $"{FirstName} {LastName}"; }
+        }
+
+        [NotMapped]
+        public double AvgRating
+        {
+            get
+            {
+                var pRatings = new List<int>();
+
+                foreach (var product in Products)
+                {
+                    foreach(var rating in product.Ratings)
+
+                    pRatings.Add(rating.Rating);
+                }
+
+                return pRatings.Average();
+            }
         }
     }
 }

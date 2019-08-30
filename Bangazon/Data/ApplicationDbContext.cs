@@ -218,5 +218,7 @@ namespace Bangazon.Data {
             );
         }
 
+        public DbSet<Bangazon.Models.ProductRating> ProductRating { get; set; }
+
     }
 }
