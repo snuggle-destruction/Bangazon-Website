@@ -30,7 +30,6 @@ namespace Bangazon.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
-
                 var applicationDbContext = _context.Order
                         .Include(o => o.User)
                         .Include(o => o.OrderProducts)
@@ -41,7 +40,6 @@ namespace Bangazon.Controllers
             {
                 return NotFound();
             }
-
         }
 
         // GET: Orders/Details/5
@@ -180,10 +178,16 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var orderedProduct = await _context.OrderProduct.FirstOrDefaultAsync(o => o.OrderId == id);
+            //var order = await _context.Order.FirstOrDefaultAsync(o => o.OrderId == id);
+            var order = await _context.Order
+            .Include(o => o.PaymentType)
+            .Include(o => o.User)
+            .Include(o => o.OrderProducts)
+            .ThenInclude(op => op.Order)
+            .FirstOrDefaultAsync(m => m.OrderId == id);
+            var orderedProducts =  order.OrderProducts;
 
-            var order = await _context.Order.FirstOrDefaultAsync(o => o.OrderId == orderedProduct.OrderId);
-            _context.OrderProduct.RemoveRange(orderedProduct);
+            _context.OrderProduct.RemoveRange(orderedProducts);
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -241,6 +245,7 @@ namespace Bangazon.Controllers
             .ThenInclude(op => op.Product);
             return View(await applicationDbContext.ToListAsync());
         }
+
         public async Task<IActionResult> AbandonedProducts()
         {
             var abandoned = _context.Order
