@@ -62,6 +62,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Product.ProductType.Label)
                 </td>
+                <td>
+                    <a asp-controller="OrderProducts" asp-action="Delete"  asp-route-id="@item.OrderProductId">Remove from Order</a>
+                </td>
             </tr>
 
         }
@@ -91,10 +94,8 @@
     {
         <input type="hidden" asp-for="OrderId" />
         <div>
-        <a asp-controller="PaymentTypes" asp-action="Create">Add a payment</a>
+            <a asp-controller="PaymentTypes" asp-action="Create">Add a payment</a>
         </div>
-
-
     }
 }
 else
