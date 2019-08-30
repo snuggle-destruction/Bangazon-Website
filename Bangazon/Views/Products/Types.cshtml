@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Product Types</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -15,7 +15,7 @@
     <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(modelItem => item.TypeName) (@Html.DisplayFor(modelItem => item.ProductCount))
+                    @Html.DisplayFor(modelItem => item.TypeName) (@Html.DisplayFor(modelItem => item.ProductCount))
                 </th>
                 <th></th>
             </tr>

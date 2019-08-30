@@ -16,6 +16,8 @@ namespace Bangazon.Models
         [Required]
         [DataType(DataType.Date)]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Display(Name = "Date Created")]
+
         public DateTime DateCreated {get;set;}
 
         [Required]
@@ -44,13 +46,15 @@ namespace Bangazon.Models
 
         public string City {get; set;}
 
-        
+        [Display(Name = "Image Path")]
         public string ImagePath { get; set; }
         [NotMapped]
         public IFormFile ImageFile { get; set; }
        
 
         public bool Active { get; set; }
+
+        [Display(Name = "Sold Locally")]
         public bool SoldLocally { get; set; }
 
         [Required]
@@ -61,6 +65,7 @@ namespace Bangazon.Models
         [Display(Name="Product Category")]
         public int ProductTypeId { get; set; }
 
+        [Display(Name = "Product Type")]
         public ProductType ProductType { get; set; }
 
         [Display(Name = "Rating")]
@@ -74,6 +79,7 @@ namespace Bangazon.Models
         }
 
         [NotMapped]
+        [Display(Name = "Quantity Remaining")]
         public int QuantityRemaining
         {
             get
