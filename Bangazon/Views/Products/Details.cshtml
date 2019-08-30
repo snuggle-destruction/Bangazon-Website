@@ -94,6 +94,7 @@
 {
     @using (Html.BeginForm("AddToCart", "Orders", FormMethod.Post))
     {
+        <input type="hidden" asp-for="ProductId" />
         <input class="btn btn-danger" type="submit" value="Add to Cart" />
     }
 }
