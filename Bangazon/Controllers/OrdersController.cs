@@ -243,7 +243,7 @@ namespace Bangazon.Controllers
             .ThenInclude(op => op.Product)
             .ThenInclude(p => p.ProductType)
             .Where(o => o.DateCompleted == null)
-            .GroupBy(o => o.OrderProducts.Count)
+            //.Select(o => new { count = o.OrderProducts.Count() })
             .ToList();
             //.OrderByDescending(o => o.OrderProducts.Count);
             return View(abandoned);
